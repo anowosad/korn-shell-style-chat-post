@@ -59,7 +59,7 @@ export const ChatInterface = () => {
       
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: data.message || data.response || JSON.stringify(data),
+        text: data.output || data.message || data.response || JSON.stringify(data),
         sender: "bot",
         timestamp: new Date(),
       };
