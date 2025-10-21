@@ -11,7 +11,7 @@ interface Message {
   timestamp: Date;
 }
 
-const WEBHOOK_URL = "https://webj23-n8n.webj23.com/webhook-test/552a6946-6718-4d59-b23f-fbb79c7deb2a";
+const WEBHOOK_URL = "https://webj23-n8n.webj23.com/webhook/552a6946-6718-4d59-b23f-fbb79c7deb2a";
 
 export const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
