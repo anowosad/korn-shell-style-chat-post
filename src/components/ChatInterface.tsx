@@ -89,7 +89,7 @@ export const ChatInterface = () => {
     <div className="flex flex-col h-screen relative">
       {/* Background Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat md:rotate-90 md:scale-[1.5]"
+        className="absolute inset-0 bg-contain bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       />
       <div className="absolute inset-0 bg-black/40" />
