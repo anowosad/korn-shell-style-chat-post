@@ -89,14 +89,22 @@ export const ChatInterface = () => {
     <div className="flex flex-col h-screen relative">
       {/* Background Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat md:rotate-90 md:scale-[1.5]"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       />
       <div className="absolute inset-0 bg-black/40" />
       
       {/* Header with Title */}
-      <header className="relative z-10 px-4 py-8 text-center">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+      <header className="relative z-10 px-4 py-12 md:py-16 lg:py-20 text-center h-[33vh] flex items-center justify-center">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white" 
+            style={{
+              textShadow: `
+                3px 3px 0px rgba(0,0,0,0.8),
+                6px 6px 0px rgba(0,0,0,0.6),
+                9px 9px 0px rgba(0,0,0,0.4),
+                12px 12px 20px rgba(0,0,0,0.9)
+              `
+            }}>
           The Korn Shell what You need to know
         </h1>
       </header>
