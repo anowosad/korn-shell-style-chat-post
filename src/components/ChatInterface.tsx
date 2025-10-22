@@ -113,7 +113,14 @@ export const ChatInterface = () => {
       <div className="relative z-10 flex-1 overflow-y-auto px-4 py-6 space-y-4">
         {messages.length === 0 && (
           <div className="flex items-center justify-center h-full">
-            <p className="text-muted-foreground text-lg">Start a conversation...</p>
+            <div className="text-center space-y-2">
+              <p className="text-muted-foreground text-lg">Knowledge base RAG</p>
+              <p className="text-muted-foreground text-base">based on</p>
+              <p className="text-foreground text-3xl font-bold">The Korn Shell</p>
+              <p className="text-muted-foreground text-base">third addition</p>
+              <p className="text-muted-foreground text-lg">Unix and Linux Programming Manual</p>
+              <p className="text-muted-foreground text-base">Anatole Olczak</p>
+            </div>
           </div>
         )}
         {messages.map((message) => (
