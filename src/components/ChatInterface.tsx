@@ -72,7 +72,7 @@ const highlightShellCode = (code: string) => {
       return (
         <div key={lineIndex}>
           <span>{commentMatch[1]}</span>
-          <span style={{ color: '#FFFF80', backgroundColor: '#008000' }}>{commentMatch[2]}</span>
+          <span style={{ color: '#00FF00' }}>{commentMatch[2]}</span>
         </div>
       );
     }
@@ -88,28 +88,31 @@ const highlightShellCode = (code: string) => {
       // Check token type and apply colors
       if (/^\d+$/.test(token)) {
         // Numbers - red
-        tokens.push(<span key={key} style={{ color: '#FF0000' }}>{token}</span>);
+        tokens.push(<span key={key} style={{ color: '#FF6B6B' }}>{token}</span>);
       } else if (keywords1.includes(token)) {
-        // Keywords1 - black on cyan
-        tokens.push(<span key={key} style={{ color: '#000000', backgroundColor: '#80FFFF' }}>{token}</span>);
+        // Keywords1 - cyan
+        tokens.push(<span key={key} style={{ color: '#00FFFF' }}>{token}</span>);
       } else if (keywords3.includes(token)) {
-        // Keywords3 - blue on light green
-        tokens.push(<span key={key} style={{ color: '#0000FF', backgroundColor: '#00FF80' }}>{token}</span>);
+        // Keywords3 - cyan/turquoise
+        tokens.push(<span key={key} style={{ color: '#00CED1' }}>{token}</span>);
       } else if (keywords4.includes(token)) {
-        // Keywords4 - blue on light yellow
-        tokens.push(<span key={key} style={{ color: '#0000FF', backgroundColor: '#FFFF80' }}>{token}</span>);
+        // Keywords4 - yellow
+        tokens.push(<span key={key} style={{ color: '#FFD700' }}>{token}</span>);
       } else if (/^[!#(),;\[\]{}+<=>-]$/.test(token)) {
-        // Operators - teal
-        tokens.push(<span key={key} style={{ color: '#408080' }}>{token}</span>);
+        // Operators - lighter teal
+        tokens.push(<span key={key} style={{ color: '#40E0D0' }}>{token}</span>);
       } else if (/^["'].*["']$/.test(token)) {
-        // Strings - default color
-        tokens.push(<span key={key}>{token}</span>);
+        // Strings - light color
+        tokens.push(<span key={key} style={{ color: '#98FB98' }}>{token}</span>);
       } else if (token.startsWith('#')) {
         // Inline comments
-        tokens.push(<span key={key} style={{ color: '#FFFF80', backgroundColor: '#008000' }}>{token}</span>);
+        tokens.push(<span key={key} style={{ color: '#00FF00' }}>{token}</span>);
+      } else if (token.startsWith('$')) {
+        // Variables - distinct color
+        tokens.push(<span key={key} style={{ color: '#FFA500' }}>{token}</span>);
       } else {
-        // Default
-        tokens.push(<span key={key}>{token}</span>);
+        // Default - white/light gray
+        tokens.push(<span key={key} style={{ color: '#E0E0E0' }}>{token}</span>);
       }
     });
     
@@ -129,15 +132,15 @@ const CodeBlock = ({ content, language }: { content: string; language?: string }
   const highlightedCode = highlightShellCode(content);
 
   return (
-    <div className="relative bg-white rounded-lg p-4 font-mono text-sm border border-gray-300 shadow-sm">
+    <div className="relative bg-gray-900 rounded-lg p-4 font-mono text-sm border border-gray-700 shadow-sm">
       <button
         onClick={handleCopy}
-        className="absolute top-2 right-2 p-1.5 rounded hover:bg-gray-100 transition-colors"
+        className="absolute top-2 right-2 p-1.5 rounded hover:bg-gray-800 transition-colors"
         aria-label="Copy code"
       >
-        {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4 text-gray-600" />}
+        {copied ? <Check className="h-4 w-4 text-green-400" /> : <Copy className="h-4 w-4 text-gray-400" />}
       </button>
-      <pre className="whitespace-pre-wrap break-words pr-8 text-black">{highlightedCode}</pre>
+      <pre className="whitespace-pre-wrap break-words pr-8">{highlightedCode}</pre>
     </div>
   );
 };
