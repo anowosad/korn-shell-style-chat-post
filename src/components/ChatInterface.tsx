@@ -54,6 +54,69 @@ const parseMessage = (text: string): MessagePart[] => {
   return parts.length > 0 ? parts : [{ type: "text", content: text }];
 };
 
+const highlightShellCode = (code: string) => {
+  // Keywords based on the UDL config
+  const keywords1 = ['then', 'else', 'function', 'break', 'do', 'until', 'use', 'try', 'catch', 'return', 'if', 'fi', 'while', 'case', 'esac', 'for', 'done', 'in'];
+  const keywords3 = ['print', 'echo', 'lower', 'trim', 'edit', 'const', 'chmod', 'cd', 'ls', 'cat', 'grep', 'awk', 'sed'];
+  const keywords4 = ['true', 'false', 'null', 'and', 'or', 'not'];
+  
+  const lines = code.split('\n');
+  
+  return lines.map((line, lineIndex) => {
+    const tokens: JSX.Element[] = [];
+    let currentPos = 0;
+    
+    // Check for comments first
+    const commentMatch = line.match(/^(\s*)(#.*)$/);
+    if (commentMatch) {
+      return (
+        <div key={lineIndex}>
+          <span>{commentMatch[1]}</span>
+          <span style={{ color: '#FFFF80', backgroundColor: '#008000' }}>{commentMatch[2]}</span>
+        </div>
+      );
+    }
+    
+    // Tokenize the line
+    const tokenRegex = /(\$?\w+|[!#(),;\[\]{}+<=>-]|\d+|"[^"]*"|'[^']*'|\s+)/g;
+    const matches = Array.from(line.matchAll(tokenRegex));
+    
+    matches.forEach((match, i) => {
+      const token = match[0];
+      const key = `${lineIndex}-${i}`;
+      
+      // Check token type and apply colors
+      if (/^\d+$/.test(token)) {
+        // Numbers - red
+        tokens.push(<span key={key} style={{ color: '#FF0000' }}>{token}</span>);
+      } else if (keywords1.includes(token)) {
+        // Keywords1 - black on cyan
+        tokens.push(<span key={key} style={{ color: '#000000', backgroundColor: '#80FFFF' }}>{token}</span>);
+      } else if (keywords3.includes(token)) {
+        // Keywords3 - blue on light green
+        tokens.push(<span key={key} style={{ color: '#0000FF', backgroundColor: '#00FF80' }}>{token}</span>);
+      } else if (keywords4.includes(token)) {
+        // Keywords4 - blue on light yellow
+        tokens.push(<span key={key} style={{ color: '#0000FF', backgroundColor: '#FFFF80' }}>{token}</span>);
+      } else if (/^[!#(),;\[\]{}+<=>-]$/.test(token)) {
+        // Operators - teal
+        tokens.push(<span key={key} style={{ color: '#408080' }}>{token}</span>);
+      } else if (/^["'].*["']$/.test(token)) {
+        // Strings - default color
+        tokens.push(<span key={key}>{token}</span>);
+      } else if (token.startsWith('#')) {
+        // Inline comments
+        tokens.push(<span key={key} style={{ color: '#FFFF80', backgroundColor: '#008000' }}>{token}</span>);
+      } else {
+        // Default
+        tokens.push(<span key={key}>{token}</span>);
+      }
+    });
+    
+    return <div key={lineIndex}>{tokens.length > 0 ? tokens : line}</div>;
+  });
+};
+
 const CodeBlock = ({ content, language }: { content: string; language?: string }) => {
   const [copied, setCopied] = useState(false);
 
@@ -63,16 +126,18 @@ const CodeBlock = ({ content, language }: { content: string; language?: string }
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const highlightedCode = highlightShellCode(content);
+
   return (
-    <div className="relative bg-muted/50 rounded-lg p-4 font-mono text-sm">
+    <div className="relative bg-white rounded-lg p-4 font-mono text-sm border border-gray-300 shadow-sm">
       <button
         onClick={handleCopy}
-        className="absolute top-2 right-2 p-1.5 rounded hover:bg-muted transition-colors"
+        className="absolute top-2 right-2 p-1.5 rounded hover:bg-gray-100 transition-colors"
         aria-label="Copy code"
       >
-        {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+        {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4 text-gray-600" />}
       </button>
-      <pre className="whitespace-pre-wrap break-words pr-8">{content}</pre>
+      <pre className="whitespace-pre-wrap break-words pr-8 text-black">{highlightedCode}</pre>
     </div>
   );
 };
