@@ -107,7 +107,7 @@ export const ChatInterface = () => {
               `,
           }}
         >
-          The Korn Shell what You need to know
+          Korn Shell Scripting: What You Need to Know
         </h1>
       </header>
 
@@ -116,10 +116,10 @@ export const ChatInterface = () => {
         {messages.length === 0 && (
           <div className="flex items-center justify-center h-full">
             <div className="text-center space-y-2">
-              <p className="text-muted-foreground text-lg font-bold">RAG for KornShell AI Knowledge Base</p>
+              <p className="text-foreground text-lg font-bold">RAG for KornShell AI Knowledge Base</p>
               <p className="text-muted-foreground text-base">based on</p>
               <p className="text-foreground text-3xl font-bold">The Korn Shell</p>
-              <p className="text-muted-foreground text-base font-bold">third addition</p>
+              <p className="text-foreground text-base font-bold">third addition</p>
               <p className="text-muted-foreground text-lg">Unix and Linux Programming Manual</p>
               <p className="text-muted-foreground text-base">Anatole Olczak</p>
             </div>
