@@ -56,66 +56,135 @@ const parseMessage = (text: string): MessagePart[] => {
 
 const highlightShellCode = (code: string) => {
   // Keywords based on the UDL config
-  const keywords1 = ['then', 'else', 'function', 'break', 'do', 'until', 'use', 'try', 'catch', 'return', 'if', 'fi', 'while', 'case', 'esac', 'for', 'done', 'in'];
-  const keywords3 = ['print', 'echo', 'lower', 'trim', 'edit', 'const', 'chmod', 'cd', 'ls', 'cat', 'grep', 'awk', 'sed'];
-  const keywords4 = ['true', 'false', 'null', 'and', 'or', 'not'];
-  
-  const lines = code.split('\n');
-  
+  const keywords1 = [
+    "then",
+    "else",
+    "function",
+    "break",
+    "do",
+    "until",
+    "use",
+    "try",
+    "catch",
+    "return",
+    "if",
+    "fi",
+    "while",
+    "case",
+    "esac",
+    "for",
+    "done",
+    "in",
+  ];
+  const keywords3 = [
+    "print",
+    "echo",
+    "lower",
+    "trim",
+    "edit",
+    "const",
+    "chmod",
+    "cd",
+    "ls",
+    "cat",
+    "grep",
+    "awk",
+    "sed",
+  ];
+  const keywords4 = ["true", "false", "null", "and", "or", "not"];
+
+  const lines = code.split("\n");
+
   return lines.map((line, lineIndex) => {
     const tokens: JSX.Element[] = [];
     let currentPos = 0;
-    
+
     // Check for comments first
     const commentMatch = line.match(/^(\s*)(#.*)$/);
     if (commentMatch) {
       return (
         <div key={lineIndex}>
           <span>{commentMatch[1]}</span>
-          <span style={{ color: '#00FF00' }}>{commentMatch[2]}</span>
+          <span style={{ color: "#00FF00" }}>{commentMatch[2]}</span>
         </div>
       );
     }
-    
+
     // Tokenize the line
     const tokenRegex = /(\$?\w+|[!#(),;\[\]{}+<=>-]|\d+|"[^"]*"|'[^']*'|\s+)/g;
     const matches = Array.from(line.matchAll(tokenRegex));
-    
+
     matches.forEach((match, i) => {
       const token = match[0];
       const key = `${lineIndex}-${i}`;
-      
+
       // Check token type and apply colors
       if (/^\d+$/.test(token)) {
         // Numbers - red
-        tokens.push(<span key={key} style={{ color: '#FF6B6B' }}>{token}</span>);
+        tokens.push(
+          <span key={key} style={{ color: "#FF6B6B" }}>
+            {token}
+          </span>,
+        );
       } else if (keywords1.includes(token)) {
         // Keywords1 - cyan
-        tokens.push(<span key={key} style={{ color: '#00FFFF' }}>{token}</span>);
+        tokens.push(
+          <span key={key} style={{ color: "#00FFFF" }}>
+            {token}
+          </span>,
+        );
       } else if (keywords3.includes(token)) {
         // Keywords3 - cyan/turquoise
-        tokens.push(<span key={key} style={{ color: '#00CED1' }}>{token}</span>);
+        tokens.push(
+          <span key={key} style={{ color: "#00CED1" }}>
+            {token}
+          </span>,
+        );
       } else if (keywords4.includes(token)) {
         // Keywords4 - yellow
-        tokens.push(<span key={key} style={{ color: '#FFD700' }}>{token}</span>);
+        tokens.push(
+          <span key={key} style={{ color: "#FFD700" }}>
+            {token}
+          </span>,
+        );
       } else if (/^[!#(),;\[\]{}+<=>-]$/.test(token)) {
         // Operators - lighter teal
-        tokens.push(<span key={key} style={{ color: '#40E0D0' }}>{token}</span>);
+        tokens.push(
+          <span key={key} style={{ color: "#40E0D0" }}>
+            {token}
+          </span>,
+        );
       } else if (/^["'].*["']$/.test(token)) {
         // Strings - light color
-        tokens.push(<span key={key} style={{ color: '#98FB98' }}>{token}</span>);
-      } else if (token.startsWith('#')) {
+        tokens.push(
+          <span key={key} style={{ color: "#98FB98" }}>
+            {token}
+          </span>,
+        );
+      } else if (token.startsWith("#")) {
         // Inline comments
-        tokens.push(<span key={key} style={{ color: '#00FF00' }}>{token}</span>);
-      } else if (token.startsWith('$')) {
+        tokens.push(
+          <span key={key} style={{ color: "#00FF00" }}>
+            {token}
+          </span>,
+        );
+      } else if (token.startsWith("$")) {
         // Variables - distinct color
-        tokens.push(<span key={key} style={{ color: '#FFA500' }}>{token}</span>);
+        tokens.push(
+          <span key={key} style={{ color: "#FFA500" }}>
+            {token}
+          </span>,
+        );
       } else {
         // Default - white/light gray
-        tokens.push(<span key={key} style={{ color: '#E0E0E0' }}>{token}</span>);
+        tokens.push(
+          <span key={key} style={{ color: "#E0E0E0" }}>
+            {token}
+          </span>,
+        );
       }
     });
-    
+
     return <div key={lineIndex}>{tokens.length > 0 ? tokens : line}</div>;
   });
 };
@@ -249,7 +318,7 @@ export const ChatInterface = () => {
         {messages.length === 0 && (
           <div className="flex items-center justify-center h-full">
             <div className="text-center space-y-2">
-              <p className="text-foreground text-lg font-bold">RAG for KornShell AI Knowledge Base</p>
+              <p className="text-foreground text-lg font-bold">RAG for Korn Shell AI Knowledge Base</p>
               <p className="text-muted-foreground text-base">based on</p>
               <p className="text-foreground text-3xl font-bold">The Korn Shell</p>
               <p className="text-foreground text-base font-bold">Third Addition</p>
