@@ -115,7 +115,7 @@ export const ChatInterface = () => {
       <div className="relative z-10 flex-1 overflow-y-auto px-4 py-6 space-y-4">
         {messages.length === 0 && (
           <div className="flex items-center justify-center h-full">
-            <p className="text-muted-foreground text-lg">Start a conversation...</p>
+            <p className="text-muted-foreground text-lg">Knowledge base RAG</p>
           </div>
         )}
         {messages.map((message) => (
