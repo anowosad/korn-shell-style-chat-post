@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, Copy, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import backgroundImage from "@/assets/background.png";
 
@@ -11,6 +11,71 @@ interface Message {
   sender: "user" | "bot";
   timestamp: Date;
 }
+
+interface MessagePart {
+  type: "text" | "code";
+  content: string;
+  language?: string;
+}
+
+const parseMessage = (text: string): MessagePart[] => {
+  const parts: MessagePart[] = [];
+  const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = codeBlockRegex.exec(text)) !== null) {
+    // Add text before code block
+    if (match.index > lastIndex) {
+      const textContent = text.substring(lastIndex, match.index).trim();
+      if (textContent) {
+        parts.push({ type: "text", content: textContent });
+      }
+    }
+
+    // Add code block
+    parts.push({
+      type: "code",
+      content: match[2].trim(),
+      language: match[1] || "bash",
+    });
+
+    lastIndex = match.index + match[0].length;
+  }
+
+  // Add remaining text
+  if (lastIndex < text.length) {
+    const textContent = text.substring(lastIndex).trim();
+    if (textContent) {
+      parts.push({ type: "text", content: textContent });
+    }
+  }
+
+  return parts.length > 0 ? parts : [{ type: "text", content: text }];
+};
+
+const CodeBlock = ({ content, language }: { content: string; language?: string }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="relative bg-muted/50 rounded-lg p-4 font-mono text-sm">
+      <button
+        onClick={handleCopy}
+        className="absolute top-2 right-2 p-1.5 rounded hover:bg-muted transition-colors"
+        aria-label="Copy code"
+      >
+        {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+      </button>
+      <pre className="whitespace-pre-wrap break-words pr-8">{content}</pre>
+    </div>
+  );
+};
 
 const WEBHOOK_URL = "https://webj23-n8n.webj23.com/webhook/552a6946-6718-4d59-b23f-fbb79c7deb2a";
 
@@ -125,17 +190,48 @@ export const ChatInterface = () => {
             </div>
           </div>
         )}
-        {messages.map((message) => (
-          <div key={message.id} className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
-            <div
-              className={`max-w-[80%] md:max-w-[60%] rounded-2xl px-6 py-3 ${
-                message.sender === "user" ? "bg-chat-user text-white" : "bg-chat-bot text-foreground"
-              } animate-in slide-in-from-bottom-2 duration-300`}
-            >
-              <p className="whitespace-pre-wrap break-words">{message.text}</p>
+        {messages.map((message) => {
+          if (message.sender === "user") {
+            return (
+              <div key={message.id} className="flex justify-end">
+                <div className="max-w-[80%] md:max-w-[60%] rounded-2xl px-6 py-3 bg-chat-user text-white animate-in slide-in-from-bottom-2 duration-300">
+                  <p className="whitespace-pre-wrap break-words">{message.text}</p>
+                </div>
+              </div>
+            );
+          }
+
+          const parts = parseMessage(message.text);
+          const hasCode = parts.some((part) => part.type === "code");
+
+          if (!hasCode) {
+            return (
+              <div key={message.id} className="flex justify-start">
+                <div className="max-w-[80%] md:max-w-[60%] rounded-2xl px-6 py-3 bg-chat-bot text-foreground animate-in slide-in-from-bottom-2 duration-300">
+                  <p className="whitespace-pre-wrap break-words">{message.text}</p>
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <div key={message.id} className="space-y-4 animate-in slide-in-from-bottom-2 duration-300">
+              {parts.map((part, index) => (
+                <div key={index} className={`flex ${part.type === "code" ? "justify-end" : "justify-start"}`}>
+                  {part.type === "text" ? (
+                    <div className="max-w-[80%] md:max-w-[60%] rounded-2xl px-6 py-3 bg-chat-bot text-foreground">
+                      <p className="whitespace-pre-wrap break-words">{part.content}</p>
+                    </div>
+                  ) : (
+                    <div className="max-w-[80%] md:max-w-[60%]">
+                      <CodeBlock content={part.content} language={part.language} />
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
-          </div>
-        ))}
+          );
+        })}
         {isLoading && (
           <div className="flex justify-start">
             <div className="bg-chat-bot rounded-2xl px-6 py-3 flex items-center gap-2">
