@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import backgroundImage from "@/assets/background.jpg";
 
 interface Message {
   id: string;
@@ -85,9 +86,23 @@ export const ChatInterface = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h-screen relative">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      />
+      <div className="absolute inset-0 bg-black/40" />
+      
+      {/* Header with Title */}
+      <header className="relative z-10 px-4 py-8 text-center">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+          The Korn Shell what You need to know
+        </h1>
+      </header>
+
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+      <div className="relative z-10 flex-1 overflow-y-auto px-4 py-6 space-y-4">
         {messages.length === 0 && (
           <div className="flex items-center justify-center h-full">
             <p className="text-muted-foreground text-lg">Start a conversation...</p>
@@ -121,7 +136,7 @@ export const ChatInterface = () => {
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-border bg-background p-4">
+      <div className="relative z-10 border-t border-border bg-background/95 backdrop-blur-sm p-4">
         <div className="max-w-4xl mx-auto">
           <div className="relative bg-chat-input rounded-3xl flex items-end gap-2 p-2">
             <Textarea
