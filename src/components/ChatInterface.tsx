@@ -116,7 +116,7 @@ export const ChatInterface = () => {
         {messages.length === 0 && (
           <div className="flex items-center justify-center h-full">
             <div className="text-center space-y-2">
-              <p className="text-muted-foreground text-lg">AI Knowledge Base RAG</p>
+              <p className="text-muted-foreground text-lg">RAG for KornShell AI Knowledge Base</p>
               <p className="text-muted-foreground text-base">based on</p>
               <p className="text-foreground text-3xl font-bold">The Korn Shell</p>
               <p className="text-muted-foreground text-base">third addition</p>
