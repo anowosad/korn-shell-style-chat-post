@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import backgroundImage from "@/assets/background.jpg";
+import backgroundImage from "@/assets/background.png";
 
 interface Message {
   id: string;
